@@ -13,7 +13,7 @@ class Activity extends Model
 
     protected $fillable = [
         'company_id',
-        'guide_id',
+        'rep_id',
         'name',
         'description',
         'start_date',
