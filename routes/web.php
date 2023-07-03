@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CompanyActivityController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CompanyRepController;
 use App\Http\Controllers\CompanyUserController;
@@ -22,6 +23,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('companies', CompanyController::class)->middleware('isAdmin');
     Route::resource('companies.users', CompanyUserController::class)->except('show');
     Route::resource('companies.reps', CompanyRepController::class)->except('show');
+    Route::resource('companies.activities', CompanyActivityController::class);
 });
 
 require __DIR__.'/auth.php';
