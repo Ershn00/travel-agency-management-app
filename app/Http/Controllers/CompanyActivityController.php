@@ -15,15 +15,25 @@ use Illuminate\View\View;
 
 class CompanyActivityController extends Controller
 {
+    /**
+     * @throws AuthorizationException
+     */
     public function index(Company $company): View
     {
+        $this->authorize('viewAny', $company);
+
         $company->load('activities');
 
         return view('companies.activities.index', compact('company'));
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function create(Company $company): View
     {
+        $this->authorize('create', $company);
+
         $reps = User::where('company_id', $company->id)
             ->where('role_id', Role::REP->value)
             ->pluck('name', 'id');
@@ -31,8 +41,13 @@ class CompanyActivityController extends Controller
         return view('companies.activities.create', compact('reps', 'company'));
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function store(StoreActivityRequest $request, Company $company): RedirectResponse
     {
+        $this->authorize('create', $company);
+
         if ($request->hasFile('image')) {
             $path = $request->file('image')->storePublicly('activities', 'public');
         }
@@ -59,8 +74,13 @@ class CompanyActivityController extends Controller
         return view('companies.activities.edit', compact('reps', 'activity', 'company'));
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function update(UpdateActivityRequest $request, Company $company, Activity $activity): RedirectResponse
     {
+        $this->authorize('update', $company);
+
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('activities', 'public');
             if ($activity->photo) {
@@ -75,8 +95,13 @@ class CompanyActivityController extends Controller
         return to_route('companies.activities.index', $company);
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function destroy(Company $company, Activity $activity): RedirectResponse
     {
+        $this->authorize('delete', $company);
+
         $activity->delete();
 
         return to_route('companies.activities.index', $company);
