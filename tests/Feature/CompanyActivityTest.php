@@ -6,9 +6,6 @@ use App\Models\Activity;
 use App\Models\Company;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class CompanyActivityTest extends TestCase
