@@ -52,4 +52,11 @@ class UserFactory extends Factory
             'role_id' => Role::COMPANY_OWNER->value,
         ]);
     }
+
+    public function rep(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role_id' => Role::REP->value,
+        ]);
+    }
 }

@@ -24,6 +24,9 @@
                         <x-nav-link :href="route('companies.users.index', auth()->user()->company_id)" :active="request()->routeIs('companies.users.*')">
                             {{ __('Administrators') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('companies.reps.index', auth()->user()->company_id)" :active="request()->routeIs('companies.reps.*')">
+                            {{ __('Representatives') }}
+                        </x-nav-link>
                     @endif
                 </div>
             </div>
