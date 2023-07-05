@@ -3,7 +3,6 @@
 namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Password;
 
 class StoreRepRequest extends FormRequest
 {
@@ -15,9 +14,14 @@ class StoreRepRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string'],
-            'email' => ['required', 'email', 'unique:users,email'],
-            'password' => ['required', Password::defaults()],
+            'email' => ['required', 'email', 'unique:user_invitations,email'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'email.unique' => 'Invitation with this email address already requested.'
         ];
     }
 }

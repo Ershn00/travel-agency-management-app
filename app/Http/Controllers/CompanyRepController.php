@@ -5,10 +5,14 @@ namespace App\Http\Controllers;
 use App\Enums\Role;
 use App\Http\Requests\User\StoreRepRequest;
 use App\Http\Requests\User\UpdateRepRequest;
+use App\Mail\RegistrationInvite;
 use App\Models\Company;
 use App\Models\User;
+use App\Models\UserInvitation;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class CompanyRepController extends Controller
@@ -42,12 +46,14 @@ class CompanyRepController extends Controller
     {
         $this->authorize('create', $company);
 
-        $company->users()->create([
-            'name' => $request->input('name'),
+        $invitation = UserInvitation::create([
             'email' => $request->input('email'),
-            'password' => bcrypt($request->input('password')),
+            'token' => Str::uuid(),
+            'company_id' => $company->id,
             'role_id' => Role::REP->value,
         ]);
+
+        Mail::to($request->input('email'))->send(new RegistrationInvite($invitation));
 
         return to_route('companies.reps.index', $company);
     }
