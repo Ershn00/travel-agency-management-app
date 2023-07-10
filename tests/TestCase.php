@@ -14,9 +14,6 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        /**
-         * Seed the database
-         */
         $this->seed();
     }
 }
