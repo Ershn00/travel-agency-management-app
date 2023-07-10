@@ -1,6 +1,6 @@
 ## About
 
-All purpose reservation app.
+(WIP) Reservation application tailored for travel industry.
 
 ## Stack
 
@@ -10,4 +10,10 @@ All purpose reservation app.
 
 ## Todo
 
-- Define industries
+- Dashboard
+- Follow activities (Admin feature)
+- Reporting
+- Additions to activity and customer details
+- Custom defined notifications of activities
+- Calendar management
+- Add Livewire to forms
