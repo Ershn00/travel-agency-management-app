@@ -10,7 +10,6 @@ use App\Models\Company;
 use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class CompanyActivityController extends Controller
@@ -48,14 +47,14 @@ class CompanyActivityController extends Controller
     {
         $this->authorize('create', $company);
 
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->storePublicly('activities', 'public');
-        }
+        $filename = $this->uploadImage($request);
 
         $activity = Activity::create($request->validated() + [
                 'company_id' => $company->id,
-                'photo' => $path ?? null,
+                'photo' => $filename,
             ]);
+
+        $activity->participants()->sync($request->input('reps'));
 
         return to_route('companies.activities.index', $company);
     }
@@ -81,15 +80,10 @@ class CompanyActivityController extends Controller
     {
         $this->authorize('update', $company);
 
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('activities', 'public');
-            if ($activity->photo) {
-                Storage::disk('public')->delete($activity->photo);
-            }
-        }
+        $filename = $this->uploadImage($request);
 
         $activity->update($request->validated() + [
-                'photo' => $path ?? $activity->photo,
+                'photo' => $filename ?? $activity->photo,
             ]);
 
         return to_route('companies.activities.index', $company);
@@ -105,5 +99,12 @@ class CompanyActivityController extends Controller
         $activity->delete();
 
         return to_route('companies.activities.index', $company);
+    }
+
+    private function uploadImage(StoreActivityRequest|UpdateActivityRequest $request): string|null
+    {
+        return $request->hasFile('image')
+            ? $request->file('image')->storePublicly('activities', 'public')
+            : null;
     }
 }
